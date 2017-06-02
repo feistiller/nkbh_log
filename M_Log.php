@@ -6,26 +6,30 @@
  * Time: 10:03
  * 日志打印类
  */
-namespace Lib\myTools;
+namespace NKBH\MyTools;
 //引入IP类
-include_once("GetHostInfo.class.php");
+include_once("GetHostInfo.php");
+
 class M_Log
 {
-    private $baseLogUrl,$debugLogUrl,$toolsLogUrl,$ip;
+    private $src, $folderName, $file, $ip;
+
     //构造方法
     public function __construct()
     {
-        $date=date('Y-m-d');
-        $this->baseLogUrl=dirname(__FILE__)."/../ServerData/BaseLog/".$date.'.log';
-        $this->debugLogUrl=dirname(__FILE__)."/../ServerData/DebugLog/".$date.'.log';
-        $this->toolsLogUrl=dirname(__FILE__)."/../ServerData/ToolsLog/".$date.'.log';
-        $temp=new GetHostInfo();
-        $this->ip=$temp::getIP();
+        $this->src = $_SERVER['DOCUMENT_ROOT']. '/Public';
+        $this->folderName = '/Base/';
+        $this->file = 'base';
+        //$date=date('Y-m-d');
+        $temp = new GetHostInfo();
+        $this->ip = $temp::getIP();
+        date_default_timezone_set("PRC");
     }
 
     //debug 日志
-    function debugLog($info)
+    function debugLog($info, $src = null, $folderName = null, $file = null)
     {
+
         $time = date('m-d H:i:s');
         $backtrace = debug_backtrace();
         $backtrace_line = array_shift($backtrace); // 哪一行调用的log方法
@@ -50,8 +54,30 @@ class M_Log
     }
 
     //基本的打印API请求日志输出
-    function baseLog($info)
+    function baseLog($info, $src = null, $folderName = null, $file = null)
     {
-        return file_put_contents($this->baseLogUrl, date("Y-m-d H:i:s") .$this->ip. " " . $info . PHP_EOL, FILE_APPEND | LOCK_EX);
+        if ($src != null) {
+            $this->src = $src;
+        }
+        if ($folderName != null) {
+            $this->folderName = $folderName;
+        }
+        if ($file != null) {
+            $this->file = $file;
+        }
+        $temp_url = $this->src . $this->folderName;
+        $this->createDir($temp_url);
+
+        $temp_url = $temp_url . $this->file . "_" . date('Y-m-d') . ".log";
+        var_dump($temp_url);
+        return file_put_contents($temp_url, date("Y-m-d H:i:s") . $this->ip . " " . $info . PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
+
+    function createDir($path)
+    {
+        if (!file_exists($path)) {
+            $this->createDir(dirname($path));
+            mkdir($path, 0777);
+        }
     }
 }

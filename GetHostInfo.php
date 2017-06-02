@@ -6,8 +6,7 @@
  * Time: 10:03
  * 获得用户的IP（真），MAC等信息(未来)，以供Log或者其他方式调用
  */
-namespace Lib\myTools;
-
+namespace NKBH\MyTools;
 class GetHostInfo
 {
     function __construct()
