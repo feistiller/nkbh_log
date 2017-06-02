@@ -1,0 +1,13 @@
+{
+    "name": "nkbh/nkbh_m_log",
+    "description": "PHP Log use file_put_contents() let PHP Log become easy and funny",
+    "type": "tool",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "stiller",
+            "email": "uneedzf@outlook.com"
+        }
+    ],
+    "require": {}
+}
