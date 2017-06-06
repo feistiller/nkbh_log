@@ -29,7 +29,18 @@ class M_Log
     //debug 日志
     function debugLog($info, $src = null, $folderName = null, $file = null)
     {
-
+        if ($src != null) {
+            $this->src = $src;
+        }
+        if ($folderName != null) {
+            $this->folderName = $folderName;
+        }
+        if ($file != null) {
+            $this->file = $file;
+        }
+        $temp_url = $this->src . $this->folderName;
+        $this->createDir($temp_url);
+        
         $time = date('m-d H:i:s');
         $backtrace = debug_backtrace();
         $backtrace_line = array_shift($backtrace); // 哪一行调用的log方法
@@ -69,7 +80,6 @@ class M_Log
         $this->createDir($temp_url);
 
         $temp_url = $temp_url . $this->file . "_" . date('Y-m-d') . ".log";
-        var_dump($temp_url);
         return file_put_contents($temp_url, date("Y-m-d H:i:s") . $this->ip . " " . $info . PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 
